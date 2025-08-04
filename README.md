@@ -1,6 +1,6 @@
 # Viewer - Markdown File Viewer
 
-A lightweight, modern WPF application for viewing Markdown files with real-time GitHub-flavored rendering.
+A small utility born out of personal need: many Markdown editors have live previews, but few standalone viewers make opening and printing `.md` files straightforward. Viewer is a lightweight WPF application that renders GitHub-Flavored Markdown in real time using the official GitHub API—built to solve that annoyance, and happy if it helps someone else.
 
 ## Features
 
