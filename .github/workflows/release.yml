@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+      
+    - name: Restore NuGet packages
+      run: nuget restore *.sln
+      
+    - name: Build Release
+      run: msbuild *.sln /p:Configuration=Release /p:Platform="Any CPU"
+      
+    - name: Create Release ZIP
+      run: |
+        $version = if ($env:GITHUB_REF -match 'refs/tags/v(.*)') { $matches[1] } else { "${{ github.event.inputs.version }}" }
+        $releaseDir = "MDViewer\bin\Release"
+        $zipPath = "MDViewer-v$version-Portable.zip"
+        
+        Compress-Archive -Path "$releaseDir\*" -DestinationPath $zipPath -Force
+        
+        echo "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
+        echo "ZIP_PATH=$zipPath" >> $env:GITHUB_ENV
+      shell: pwsh
+      
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ env.RELEASE_VERSION }}
+        name: MDViewer v${{ env.RELEASE_VERSION }}
+        body: |
+          ## MDViewer v${{ env.RELEASE_VERSION }}
+          
+          ### Downloads
+          - **Portable Version**: Download the ZIP file and extract to any folder
+          - **Installer**: Download and run the MSI installer (if available)
+          
+          ### System Requirements
+          - Windows 10 or later
+          - .NET Framework 4.8
+          - WebView2 Runtime (auto-installed if needed)
+        files: |
+          ${{ env.ZIP_PATH }}
+          **/*.msi
+        draft: false
+        prerelease: false

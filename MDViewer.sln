@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "El
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MDViewer.setup", "MDViewer.setup\MDViewer.setup.vdproj", "{175A8F07-F5A1-1ADC-4A45-7C0AF6BC74EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,9 @@ Global
 		{C11319EF-63C7-431D-AFA5-FDBEAF28D199}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C11319EF-63C7-431D-AFA5-FDBEAF28D199}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C11319EF-63C7-431D-AFA5-FDBEAF28D199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{175A8F07-F5A1-1ADC-4A45-7C0AF6BC74EE}.Debug|Any CPU.ActiveCfg = Debug
+		{175A8F07-F5A1-1ADC-4A45-7C0AF6BC74EE}.Release|Any CPU.ActiveCfg = Release
+		{175A8F07-F5A1-1ADC-4A45-7C0AF6BC74EE}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

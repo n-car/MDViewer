@@ -97,6 +97,15 @@ namespace MDViewer.Properties {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a File not found: {0}.
+        /// </summary>
+        public static string FileNotFound {
+            get {
+                return ResourceManager.GetString("FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a The file will be displayed as plain text..
         /// </summary>
         public static string FileWillBeShownAsText {

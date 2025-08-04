@@ -1,40 +1,205 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Imaging;
 using System.Windows.Interop;
-using Microsoft.Win32;
+using System.Windows.Media.Imaging;
 
 namespace MDViewer
 {
     public partial class MainWindow : Window
     {
         private string currentPath = null;
+        private string[] startupArgs;
 
-        public MainWindow()
+        public MainWindow(string[] args)
+        {
+            startupArgs = args;
+            InitializeComponent();
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                InitializeComponent();
-                _ = InitializeAsync();
+                await InitializeWebView2Async(); // invece del precedente EnsureCoreWebView2Async
+                UpdateButtonStates();
+
+                if (startupArgs != null && startupArgs.Length > 0)
+                {
+                    if (File.Exists(startupArgs[0]))
+                    {
+                        currentPath = startupArgs[0];
+                        FilePathBox.Text = currentPath;
+                        await LoadFileAsync(currentPath);
+                    }
+                    else
+                    {
+                        ShowStatus(string.Format(Properties.Resources.FileNotFound, startupArgs[0]), true);
+                    }
+                }
             }
             catch (Exception ex)
             {
-             MessageBox.Show(string.Format(Properties.Resources.InitializationError, ex.Message), 
-                                 Properties.Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
+                ShowStatus($"Errore durante l'inizializzazione: {ex.Message}", true);
+                MessageBox.Show(ex.ToString(), "Errore dettagliato", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private async Task InitializeAsync()
+        private async Task InitializeWebView2Async()
         {
-            await Viewer.EnsureCoreWebView2Async();
-            UpdateButtonStates();
+            // Assicuriamoci che WebView2 runtime sia disponibile
+            await EnsureWebView2RuntimeAsync();
+
+            // Usa una cartella user-data che sicuramente è scrivibile dall'utente
+            string userDataFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "MDViewer",
+                "WebView2");
+
+            try
+            {
+                Directory.CreateDirectory(userDataFolder);
+            }
+            catch (Exception ex)
+            {
+                ShowStatus("Impossibile creare la cartella dati di WebView2: " + ex.Message, true);
+                throw;
+            }
+
+            // Crea l'ambiente esplicitamente con quella cartella
+            var env = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateAsync(null, userDataFolder);
+            await Viewer.EnsureCoreWebView2Async(env);
         }
+
+        private static readonly HttpClient _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
+
+        private async Task EnsureWebView2RuntimeAsync()
+        {
+            if (IsWebView2RuntimeInstalled())
+                return;
+
+            ShowStatus("Sto installando WebView2 Runtime...", false);
+
+            string downloadUrl = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
+            string tempBootstrapper = Path.Combine(Path.GetTempPath(), "MicrosoftEdgeWebView2Setup.exe");
+
+            if (!File.Exists(tempBootstrapper) ||
+                (DateTime.UtcNow - File.GetLastWriteTimeUtc(tempBootstrapper)) > TimeSpan.FromDays(1))
+            {
+                try
+                {
+                    using (HttpResponseMessage response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
+                    {
+                        response.EnsureSuccessStatusCode();
+                        using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                        using (var fs = new FileStream(tempBootstrapper, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            await responseStream.CopyToAsync(fs);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("Impossibile scaricare il bootstrapper WebView2: " + ex.Message, ex);
+                }
+            }
+
+            bool installed = await RunBootstrapperAsync(tempBootstrapper, silent: true);
+
+            if (!installed)
+            {
+                installed = await RunBootstrapperAsync(tempBootstrapper, silent: false, requireElevation: true);
+            }
+
+            if (!installed || !IsWebView2RuntimeInstalled())
+                throw new InvalidOperationException("WebView2 Runtime non è stato installato correttamente.");
+        }
+
+        private Task<bool> WaitForExitAsync(Process process, int timeoutMilliseconds = -1)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            void Handler(object s, EventArgs e)
+            {
+                process.Exited -= Handler;
+                tcs.TrySetResult(process.ExitCode == 0);
+            }
+
+            process.EnableRaisingEvents = true;
+            process.Exited += Handler;
+
+            if (process.HasExited)
+            {
+                process.Exited -= Handler;
+                return Task.FromResult(process.ExitCode == 0);
+            }
+
+            if (timeoutMilliseconds >= 0)
+            {
+                var ct = new System.Threading.CancellationTokenSource(timeoutMilliseconds);
+                ct.Token.Register(() =>
+                {
+                    process.Exited -= Handler;
+                    tcs.TrySetResult(false);
+                });
+            }
+
+            return tcs.Task;
+        }
+
+        private async Task<bool> RunBootstrapperAsync(string path, bool silent, bool requireElevation = false)
+        {
+            var psi = new ProcessStartInfo(path)
+            {
+                Arguments = silent ? "/silent" : string.Empty,
+                UseShellExecute = true
+            };
+
+            if (requireElevation)
+                psi.Verb = "runas";
+
+            try
+            {
+                var proc = Process.Start(psi);
+                if (proc == null)
+                    return false;
+
+                return await WaitForExitAsync(proc, timeoutMilliseconds: 120_000);
+            }
+            catch (System.ComponentModel.Win32Exception ex) when (requireElevation && ex.ErrorCode == -2147467259)
+            {
+                // L'utente ha annullato la richiesta UAC
+                ShowStatus("Installazione WebView2 annullata dall'utente.", true);
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool IsWebView2RuntimeInstalled()
+        {
+            try
+            {
+                // null usa il default user data folder
+                string version = Microsoft.Web.WebView2.Core.CoreWebView2Environment.GetAvailableBrowserVersionString(null);
+                return !string.IsNullOrEmpty(version);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
 
         private void UpdateButtonStates()
         {
@@ -57,7 +222,7 @@ namespace MDViewer
             {
                 StatusPanel.Background = System.Windows.Media.Brushes.MistyRose;
                 StatusPanel.BorderBrush = System.Windows.Media.Brushes.LightCoral;
-                StatusIcon.Text = "&#xE783;";
+                StatusIcon.Text = "\uE783";
                 StatusIcon.Foreground = System.Windows.Media.Brushes.DarkRed;
                 StatusMessage.Foreground = System.Windows.Media.Brushes.DarkRed;
             }
@@ -65,7 +230,7 @@ namespace MDViewer
             {
                 StatusPanel.Background = System.Windows.Media.Brushes.LightCyan;
                 StatusPanel.BorderBrush = System.Windows.Media.Brushes.SkyBlue;
-                StatusIcon.Text = "&#xE946;";
+                StatusIcon.Text = "\uE946";
                 StatusIcon.Foreground = System.Windows.Media.Brushes.DarkBlue;
                 StatusMessage.Foreground = System.Windows.Media.Brushes.DarkBlue;
             }
@@ -141,9 +306,9 @@ namespace MDViewer
                 {
                     ShowStatus(string.Format(Properties.Resources.ConnectionError, ex.Message), true);
                     htmlBody = "<div style='padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;'>" +
-                              "<h3>" + Properties.Resources.RenderingErrorTitle + "</h3>" +
-                              "<p><strong>" + Properties.Resources.UnableToContactGitHub + "</strong></p>" +
-                              "<p>" + Properties.Resources.Error + ": " + System.Net.WebUtility.HtmlEncode(ex.Message) + "</p>" +
+                              "<h3>🔌 " + Properties.Resources.RenderingErrorTitle + "</h3>" +
+                              "<p><strong>🌐 " + Properties.Resources.UnableToContactGitHub + "</strong></p>" +
+                              "<p>❌ " + Properties.Resources.Error + ": " + System.Net.WebUtility.HtmlEncode(ex.Message) + "</p>" +
                               "<p>" + Properties.Resources.FileWillBeShownAsText + "</p>" +
                               "<hr/><pre style='background: white; padding: 10px; border: 1px solid #ddd;'>" + System.Net.WebUtility.HtmlEncode(md) + "</pre>" +
                               "</div>";
@@ -152,8 +317,8 @@ namespace MDViewer
                 {
                     ShowStatus(string.Format(Properties.Resources.RenderingError, ex.Message), true);
                     htmlBody = "<div style='padding: 20px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;'>" +
-                              "<h3>" + Properties.Resources.RenderingErrorTitle + "</h3>" +
-                              "<p>" + Properties.Resources.Error + ": " + System.Net.WebUtility.HtmlEncode(ex.Message) + "</p>" +
+                              "<h3>💥 " + Properties.Resources.RenderingErrorTitle + "</h3>" +
+                              "<p>⛔ " + Properties.Resources.Error + ": " + System.Net.WebUtility.HtmlEncode(ex.Message) + "</p>" +
                               "<p>" + Properties.Resources.FileWillBeShownAsText + "</p>" +
                               "<hr/><pre style='background: white; padding: 10px; border: 1px solid #ddd;'>" + System.Net.WebUtility.HtmlEncode(md) + "</pre>" +
                               "</div>";
@@ -260,7 +425,7 @@ blockquote {
                     default:
                         if (char.IsControl(c))
                         {
-                            sb.Append("\\u");
+                            sb.Append("&#x");
                             sb.Append(((int)c).ToString("x4"));
                         }
                         else sb.Append(c);
@@ -278,18 +443,6 @@ blockquote {
                 var arr = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (arr.Length > 0)
                     _ = LoadFileAsync(arr[0]);
-            }
-        }
-
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-            var args = Environment.GetCommandLineArgs();
-            if (args.Length > 1)
-            {
-                var p = args[1];
-                if (File.Exists(p))
-                    _ = LoadFileAsync(p);
             }
         }
     }
