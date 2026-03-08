@@ -97,12 +97,12 @@ jobs:
           ## 🎉 MDViewer ${{ github.ref_name }}
 
           ### 📦 Downloads
-          - **Portable**: estrai e avvia, senza installazione
-          - **Installer**: setup guidato (Inno Setup)
-          - **SHA256**: checksum ufficiali dei file allegati
+          - **Portable**: extract and run, no installation required
+          - **Installer**: guided setup package (Inno Setup)
+          - **SHA256**: official checksums for attached files
 
           ### Source Code
-          - Gli archivi sorgente sono pubblicati automaticamente da GitHub (`Source code (zip)` e `Source code (tar.gz)`).
+          - Source archives are published automatically by GitHub (`Source code (zip)` and `Source code (tar.gz)`).
 
           ### 🚀 Features
           - GitHub-flavored Markdown rendering
