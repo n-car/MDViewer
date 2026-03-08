@@ -142,8 +142,15 @@
     <value>Caricamento in corso...</value>
   </data>
   <data name="MarkdownFilter" xml:space="preserve">
-    <value>File Markdown (.md)|*.md|Tutti i file (.)|*.*</value>
+    <value>File Markdown (*.md)|*.md|Tutti i file (*.*)|*.*</value>
   </data>
+<assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+<data name="md_viewer_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\md-viewer-icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+</data>
+<data name="md_viewer_icon_512x512" type="System.Resources.ResXFileRef, System.Windows.Forms">
+	<value>..\Resources\md-viewer-icon-512x512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+</data>
   <data name="NoPrintDocument" xml:space="preserve">
     <value>Nessun documento da stampare</value>
   </data>
@@ -173,5 +180,414 @@
   </data>
   <data name="FileNotFound" xml:space="preserve">
     <value>File non trovato: {0}</value>
+  </data>
+  <data name="ConfirmTitle" xml:space="preserve">
+    <value>Conferma</value>
+  </data>
+  <data name="CompletedTitle" xml:space="preserve">
+    <value>Completato</value>
+  </data>
+  <data name="AppMainWindowOpenError" xml:space="preserve">
+    <value>Errore durante l'apertura della finestra principale:
+{0}</value>
+  </data>
+  <data name="AppFatalErrorTitle" xml:space="preserve">
+    <value>Errore fatale</value>
+  </data>
+  <data name="AppUnhandledUiException" xml:space="preserve">
+    <value>Eccezione UI non gestita:
+{0}</value>
+  </data>
+  <data name="AppUnhandledDomainException" xml:space="preserve">
+    <value>Eccezione di dominio non gestita:
+{0}</value>
+  </data>
+  <data name="ProviderTooltipFormat" xml:space="preserve">
+    <value>{0}
+{1}</value>
+  </data>
+  <data name="MainRecentFilesTooltip" xml:space="preserve">
+    <value>File recenti</value>
+  </data>
+  <data name="MainNoRecentFiles" xml:space="preserve">
+    <value>Nessun file recente</value>
+  </data>
+  <data name="MainSelectProviderTooltip" xml:space="preserve">
+    <value>Scegli il motore di rendering Markdown</value>
+  </data>
+  <data name="MainProviderPlaceholder" xml:space="preserve">
+    <value>Provider: -</value>
+  </data>
+  <data name="MainProviderButtonFormat" xml:space="preserve">
+    <value>Provider: {0}</value>
+  </data>
+  <data name="MainExportPdfTooltip" xml:space="preserve">
+    <value>Esporta come PDF</value>
+  </data>
+  <data name="MainCheckUpdatesTooltip" xml:space="preserve">
+    <value>Controlla aggiornamenti</value>
+  </data>
+  <data name="MainUpdatesLabel" xml:space="preserve">
+    <value>Aggiornamenti</value>
+  </data>
+  <data name="MainSettingsTooltip" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="MainSettingsLabel" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="MainRecentFileEntryFormat" xml:space="preserve">
+    <value>_{0}. {1}</value>
+  </data>
+  <data name="MainRecentFileEntryMissingFormat" xml:space="preserve">
+    <value>_{0}. {1} (non trovato)</value>
+  </data>
+  <data name="MainClearRecentFilesMenuItem" xml:space="preserve">
+    <value>Pulisci lista file recenti</value>
+  </data>
+  <data name="MainRecentFileMissingMessage" xml:space="preserve">
+    <value>Il file non esiste più:
+{0}</value>
+  </data>
+  <data name="MainRecentFileMissingTitle" xml:space="preserve">
+    <value>File non trovato</value>
+  </data>
+  <data name="MainClearRecentFilesConfirm" xml:space="preserve">
+    <value>Vuoi cancellare la lista dei file recenti?</value>
+  </data>
+  <data name="MainClickToChangeProvider" xml:space="preserve">
+    <value>Clicca per cambiare provider</value>
+  </data>
+  <data name="MainDetailedErrorTitle" xml:space="preserve">
+    <value>Errore dettagliato</value>
+  </data>
+  <data name="MainVersionLabelFormat" xml:space="preserve">
+    <value>MDViewer {0}</value>
+  </data>
+  <data name="MainUpdateAvailableVersionLabelFormat" xml:space="preserve">
+    <value>MDViewer {0} - Nuova versione {1} disponibile!</value>
+  </data>
+  <data name="MainClickToDownloadNewVersion" xml:space="preserve">
+    <value>Clicca per scaricare la nuova versione</value>
+  </data>
+  <data name="MainCheckingUpdatesStatus" xml:space="preserve">
+    <value>Controllo aggiornamenti in corso...</value>
+  </data>
+  <data name="MainUpdateInfoUnavailableMessage" xml:space="preserve">
+    <value>Impossibile ottenere informazioni sugli aggiornamenti.
+Verifica la connessione internet.</value>
+  </data>
+  <data name="MainCheckUpdatesTitle" xml:space="preserve">
+    <value>Controllo aggiornamenti</value>
+  </data>
+  <data name="MainUpdateAvailableHeader" xml:space="preserve">
+    <value>🎉 Nuova versione disponibile!</value>
+  </data>
+  <data name="MainCurrentVersionFormat" xml:space="preserve">
+    <value>Versione corrente: {0}</value>
+  </data>
+  <data name="MainNewVersionFormat" xml:space="preserve">
+    <value>Nuova versione: {0}</value>
+  </data>
+  <data name="MainReleaseNotesHeader" xml:space="preserve">
+    <value>Note di rilascio:</value>
+  </data>
+  <data name="MainOpenDownloadPageQuestion" xml:space="preserve">
+    <value>Vuoi aprire la pagina di download?</value>
+  </data>
+  <data name="MainUpdateAvailableTitle" xml:space="preserve">
+    <value>Aggiornamento disponibile</value>
+  </data>
+  <data name="MainNoUpdateMessageFormat" xml:space="preserve">
+    <value>✅ Stai usando l'ultima versione!
+
+Versione corrente: {0}</value>
+  </data>
+  <data name="MainNoUpdateTitle" xml:space="preserve">
+    <value>Nessun aggiornamento</value>
+  </data>
+  <data name="MainUpdateCheckErrorTitle" xml:space="preserve">
+    <value>Errore controllo aggiornamenti</value>
+  </data>
+  <data name="MainUpdateCheckUnexpectedErrorFormat" xml:space="preserve">
+    <value>Errore durante il controllo aggiornamenti:
+{0}</value>
+  </data>
+  <data name="MainWebViewDataFolderCreateError" xml:space="preserve">
+    <value>Impossibile creare la cartella dati di WebView2: {0}</value>
+  </data>
+  <data name="MainInstallingWebViewRuntimeStatus" xml:space="preserve">
+    <value>Sto installando WebView2 Runtime...</value>
+  </data>
+  <data name="MainWebViewBootstrapperDownloadErrorFormat" xml:space="preserve">
+    <value>Impossibile scaricare il bootstrapper WebView2: {0}</value>
+  </data>
+  <data name="MainWebViewRuntimeInstallFailed" xml:space="preserve">
+    <value>WebView2 Runtime non è stato installato correttamente.</value>
+  </data>
+  <data name="MainWebViewInstallCanceled" xml:space="preserve">
+    <value>Installazione WebView2 annullata dall'utente.</value>
+  </data>
+  <data name="MainNoDocumentToExport" xml:space="preserve">
+    <value>Nessun documento da esportare.</value>
+  </data>
+  <data name="MainExportPdfDialogTitle" xml:space="preserve">
+    <value>Esporta come PDF</value>
+  </data>
+  <data name="MainPdfFilter" xml:space="preserve">
+    <value>File PDF (*.pdf)|*.pdf|Tutti i file (*.*)|*.*</value>
+  </data>
+  <data name="MainExportPdfInProgressStatus" xml:space="preserve">
+    <value>Esportazione PDF in corso...</value>
+  </data>
+  <data name="MainExportPdfSuccessMessageFormat" xml:space="preserve">
+    <value>PDF salvato con successo!
+
+{0}
+
+Vuoi aprire il file?</value>
+  </data>
+  <data name="MainExportPdfCompletedTitle" xml:space="preserve">
+    <value>Esportazione completata</value>
+  </data>
+  <data name="MainExportErrorStatusFormat" xml:space="preserve">
+    <value>Errore durante l'esportazione: {0}</value>
+  </data>
+  <data name="MainExportPdfErrorFormat" xml:space="preserve">
+    <value>Errore durante l'esportazione PDF:
+{0}</value>
+  </data>
+  <data name="MainGenericErrorFormat" xml:space="preserve">
+    <value>Errore: {0}</value>
+  </data>
+  <data name="MainUnknownError" xml:space="preserve">
+    <value>Errore sconosciuto</value>
+  </data>
+  <data name="SettingsWindowTitle" xml:space="preserve">
+    <value>Impostazioni - MDViewer</value>
+  </data>
+  <data name="SettingsSectionUpdates" xml:space="preserve">
+    <value>🔄 Aggiornamenti</value>
+  </data>
+  <data name="SettingsAutoUpdateLabel" xml:space="preserve">
+    <value>Controllo automatico</value>
+  </data>
+  <data name="SettingsUpdateModeManual" xml:space="preserve">
+    <value>Manuale</value>
+  </data>
+  <data name="SettingsUpdateModeDaily" xml:space="preserve">
+    <value>Giornaliero (alla prima apertura)</value>
+  </data>
+  <data name="SettingsUpdateModeWeekly" xml:space="preserve">
+    <value>Settimanale (alla prima apertura)</value>
+  </data>
+  <data name="SettingsAutoUpdateDescription" xml:space="preserve">
+    <value>Quando MDViewer deve controllare se ci sono nuovi aggiornamenti.</value>
+  </data>
+  <data name="SettingsSectionRendering" xml:space="preserve">
+    <value>📝 Rendering</value>
+  </data>
+  <data name="SettingsDefaultProviderLabel" xml:space="preserve">
+    <value>Provider predefinito</value>
+  </data>
+  <data name="SettingsDefaultProviderDescription" xml:space="preserve">
+    <value>Il motore di rendering da usare all'apertura di un file.</value>
+  </data>
+  <data name="SettingsEnableSyntaxHighlighting" xml:space="preserve">
+    <value>Abilita syntax highlighting</value>
+  </data>
+  <data name="SettingsSyntaxHighlightingDescription" xml:space="preserve">
+    <value>Colora il codice nei blocchi ``` usando highlight.js.</value>
+  </data>
+  <data name="SettingsSectionTheme" xml:space="preserve">
+    <value>🎨 Tema</value>
+  </data>
+  <data name="SettingsThemeLabel" xml:space="preserve">
+    <value>Aspetto</value>
+  </data>
+  <data name="SettingsThemeSystem" xml:space="preserve">
+    <value>Segui il sistema</value>
+  </data>
+  <data name="SettingsThemeLight" xml:space="preserve">
+    <value>Chiaro</value>
+  </data>
+  <data name="SettingsThemeDark" xml:space="preserve">
+    <value>Scuro</value>
+  </data>
+  <data name="SettingsThemeDescription" xml:space="preserve">
+    <value>L'aspetto dell'interfaccia. 'Segui il sistema' usa il tema di Windows.</value>
+  </data>
+  <data name="SettingsSectionRecentFiles" xml:space="preserve">
+    <value>📂 File Recenti</value>
+  </data>
+  <data name="SettingsMaxRecentFilesLabel" xml:space="preserve">
+    <value>Numero massimo</value>
+  </data>
+  <data name="SettingsRecentFilesOption5" xml:space="preserve">
+    <value>5 file</value>
+  </data>
+  <data name="SettingsRecentFilesOption10" xml:space="preserve">
+    <value>10 file</value>
+  </data>
+  <data name="SettingsRecentFilesOption15" xml:space="preserve">
+    <value>15 file</value>
+  </data>
+  <data name="SettingsRecentFilesOption20" xml:space="preserve">
+    <value>20 file</value>
+  </data>
+  <data name="SettingsRecentFilesDescription" xml:space="preserve">
+    <value>Quanti file recenti mostrare nel menu.</value>
+  </data>
+  <data name="SettingsClearRecentFilesButton" xml:space="preserve">
+    <value>Pulisci lista file recenti</value>
+  </data>
+  <data name="SettingsSectionCache" xml:space="preserve">
+    <value>💾 Cache (solo GitHub API)</value>
+  </data>
+  <data name="SettingsMaxCacheSizeLabel" xml:space="preserve">
+    <value>Dimensione massima</value>
+  </data>
+  <data name="SettingsCacheDurationLabel" xml:space="preserve">
+    <value>Durata cache</value>
+  </data>
+  <data name="SettingsCacheDuration1Day" xml:space="preserve">
+    <value>1 giorno</value>
+  </data>
+  <data name="SettingsCacheDuration7Days" xml:space="preserve">
+    <value>7 giorni</value>
+  </data>
+  <data name="SettingsCacheDuration30Days" xml:space="preserve">
+    <value>30 giorni</value>
+  </data>
+  <data name="SettingsClearCacheButton" xml:space="preserve">
+    <value>Pulisci cache</value>
+  </data>
+  <data name="SettingsSectionBehavior" xml:space="preserve">
+    <value>⚙️ Comportamento</value>
+  </data>
+  <data name="SettingsAutoReload" xml:space="preserve">
+    <value>Auto-reload quando il file viene modificato</value>
+  </data>
+  <data name="SettingsAutoReloadDescription" xml:space="preserve">
+    <value>Ricarica automaticamente il documento se viene modificato da un altro programma.</value>
+  </data>
+  <data name="SettingsRememberWindowPosition" xml:space="preserve">
+    <value>Ricorda posizione e dimensione finestra</value>
+  </data>
+  <data name="SettingsRememberWindowPositionDescription" xml:space="preserve">
+    <value>All'avvio, ripristina la posizione della finestra.</value>
+  </data>
+  <data name="SettingsSectionInfo" xml:space="preserve">
+    <value>ℹ️ Informazioni</value>
+  </data>
+  <data name="SettingsOpenGitHubButton" xml:space="preserve">
+    <value>🔗 Apri pagina GitHub</value>
+  </data>
+  <data name="SettingsResetDefaultsButton" xml:space="preserve">
+    <value>⚠️ Ripristina impostazioni predefinite</value>
+  </data>
+  <data name="SettingsCancelButton" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="SettingsSaveButton" xml:space="preserve">
+    <value>Salva</value>
+  </data>
+  <data name="SettingsVersionFormat" xml:space="preserve">
+    <value>Versione: {0}</value>
+  </data>
+  <data name="SettingsCacheInfoFormat" xml:space="preserve">
+    <value>{0} file, {1:F2} MB</value>
+  </data>
+  <data name="SettingsCacheEmpty" xml:space="preserve">
+    <value>Cache vuota</value>
+  </data>
+  <data name="SettingsNotAvailableShort" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="SettingsClearRecentFilesConfirm" xml:space="preserve">
+    <value>Vuoi cancellare la lista dei file recenti?</value>
+  </data>
+  <data name="SettingsRecentFilesCleared" xml:space="preserve">
+    <value>Lista file recenti cancellata.</value>
+  </data>
+  <data name="SettingsClearCacheConfirm" xml:space="preserve">
+    <value>Vuoi cancellare la cache di rendering?</value>
+  </data>
+  <data name="SettingsCacheCleared" xml:space="preserve">
+    <value>Cache cancellata.</value>
+  </data>
+  <data name="SettingsClearCacheErrorFormat" xml:space="preserve">
+    <value>Errore durante la pulizia cache:
+{0}</value>
+  </data>
+  <data name="SettingsResetDefaultsConfirm" xml:space="preserve">
+    <value>Vuoi ripristinare tutte le impostazioni ai valori predefiniti?</value>
+  </data>
+  <data name="SettingsDefaultsRestored" xml:space="preserve">
+    <value>Impostazioni ripristinate.</value>
+  </data>
+  <data name="ProviderDialogTitle" xml:space="preserve">
+    <value>Scegli provider di rendering</value>
+  </data>
+  <data name="ProviderDialogIntro" xml:space="preserve">
+    <value>Confronta i provider e scegli quello più adatto al documento corrente.</value>
+  </data>
+  <data name="ProviderDialogDetailsHeader" xml:space="preserve">
+    <value>Dettagli provider</value>
+  </data>
+  <data name="ProviderDialogCancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="ProviderDialogUseProvider" xml:space="preserve">
+    <value>Usa provider</value>
+  </data>
+  <data name="ProviderDialogSelectProviderMessage" xml:space="preserve">
+    <value>Seleziona un provider prima di continuare.</value>
+  </data>
+  <data name="ProviderDialogSelectProviderTitle" xml:space="preserve">
+    <value>Provider non selezionato</value>
+  </data>
+  <data name="ProviderMarkdigDisplayName" xml:space="preserve">
+    <value>Markdig (Locale)</value>
+  </data>
+  <data name="ProviderGitHubDisplayName" xml:space="preserve">
+    <value>GitHub API (Online)</value>
+  </data>
+  <data name="ProviderMarkdigDescription" xml:space="preserve">
+    <value>✅ Rendering locale e istantaneo
+✅ Funziona offline
+✅ Nessun limite di utilizzo
+✅ Privacy: i dati restano sul tuo PC
+✅ Supporto GitHub Flavored Markdown
+❌ @mentions e #issues non sono link attivi</value>
+  </data>
+  <data name="ProviderGitHubDescription" xml:space="preserve">
+    <value>✅ Rendering identico a GitHub.com
+✅ @mentions e #issues diventano link
+✅ Syntax highlighting avanzato
+⚠️ Richiede connessione internet
+⚠️ Limite: 60 richieste/ora
+⚠️ Privacy: contenuto inviato a GitHub</value>
+  </data>
+  <data name="ProviderMarkdigShortDescription" xml:space="preserve">
+    <value>Veloce, offline, privato</value>
+  </data>
+  <data name="ProviderGitHubShortDescription" xml:space="preserve">
+    <value>Online, @mentions attivi, limite 60/ora</value>
+  </data>
+  <data name="RendererTimeoutError" xml:space="preserve">
+    <value>Timeout: il server non risponde</value>
+  </data>
+  <data name="UpdateErrorCannotConnectGitHub" xml:space="preserve">
+    <value>Impossibile connettersi a GitHub. Verifica la connessione internet.</value>
+  </data>
+  <data name="UpdateErrorTimeout" xml:space="preserve">
+    <value>Timeout durante il controllo aggiornamenti.</value>
+  </data>
+  <data name="UpdateErrorGenericFormat" xml:space="preserve">
+    <value>Errore durante il controllo aggiornamenti: {0}</value>
+  </data>
+  <data name="RecentFileMissingDisplayFormat" xml:space="preserve">
+    <value>{0} (non trovato)</value>
   </data>
 </root>

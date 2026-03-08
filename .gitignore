@@ -26,6 +26,8 @@ TestResults/
 # NuGet
 *.nupkg
 packages/
+Release/
+releases/
 
 # Visual Studio Code
 .vscode/

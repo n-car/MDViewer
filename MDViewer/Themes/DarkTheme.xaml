@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- Colori Base - Tema Scuro -->
+    <SolidColorBrush x:Key="WindowBackground" Color="#1E1E1E"/>
+    <SolidColorBrush x:Key="ToolbarBackground" Color="#2D2D2D"/>
+    <SolidColorBrush x:Key="PanelBackground" Color="#252B34"/>
+    <SolidColorBrush x:Key="PanelBorderBrush" Color="#3B4453"/>
+    <SolidColorBrush x:Key="TextForeground" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="TextForegroundSecondary" Color="#9E9E9E"/>
+    <SolidColorBrush x:Key="TextBoxBackground" Color="#3C3C3C"/>
+    <SolidColorBrush x:Key="TextBoxForeground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="BorderColor" Color="#404040"/>
+    <SolidColorBrush x:Key="BorderColorLight" Color="#505050"/>
+    <SolidColorBrush x:Key="ControlBackground" Color="#2F3640"/>
+    <SolidColorBrush x:Key="ControlBorderBrush" Color="#4A5568"/>
+    <SolidColorBrush x:Key="ControlHoverBackground" Color="#3A4350"/>
+    <SolidColorBrush x:Key="ControlPressedBackground" Color="#4A5568"/>
+    <SolidColorBrush x:Key="ControlDisabledBackground" Color="#2A2F37"/>
+    <SolidColorBrush x:Key="ControlDisabledForeground" Color="#79808D"/>
+    <SolidColorBrush x:Key="FocusBorderBrush" Color="#7EB0FF"/>
+    <SolidColorBrush x:Key="ButtonPrimaryForeground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ButtonSecondaryForeground" Color="#E6EDF5"/>
+    <SolidColorBrush x:Key="FlatButtonHoverBackground" Color="#353E4A"/>
+    
+    <!-- Colori Accent -->
+    <SolidColorBrush x:Key="AccentColor" Color="#1976D2"/>
+    <SolidColorBrush x:Key="AccentColorHover" Color="#2196F3"/>
+    <SolidColorBrush x:Key="AccentColorPressed" Color="#1565C0"/>
+    <SolidColorBrush x:Key="AccentColorDisabled" Color="#505050"/>
+    
+    <!-- Colori Status -->
+    <SolidColorBrush x:Key="StatusInfoBackground" Color="#0D3B66"/>
+    <SolidColorBrush x:Key="StatusInfoBorder" Color="#1565C0"/>
+    <SolidColorBrush x:Key="StatusInfoForeground" Color="#90CAF9"/>
+    <SolidColorBrush x:Key="StatusWarningBackground" Color="#4A3F00"/>
+    <SolidColorBrush x:Key="StatusWarningBorder" Color="#8B7500"/>
+    <SolidColorBrush x:Key="StatusWarningForeground" Color="#FFE082"/>
+    <SolidColorBrush x:Key="StatusErrorBackground" Color="#4A0000"/>
+    <SolidColorBrush x:Key="StatusErrorBorder" Color="#8B0000"/>
+    <SolidColorBrush x:Key="StatusErrorForeground" Color="#EF9A9A"/>
+    
+    <!-- Colori ComboBox -->
+    <SolidColorBrush x:Key="ComboBoxBackground" Color="#3C3C3C"/>
+    <SolidColorBrush x:Key="ComboBoxForeground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ComboBoxBorder" Color="#505050"/>
+    
+    <!-- Colori Spinner -->
+    <SolidColorBrush x:Key="SpinnerColor" Color="#64B5F6"/>
+    
+</ResourceDictionary>

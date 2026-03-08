@@ -4,63 +4,124 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version number (e.g., 1.0.0)'
-        required: true
-        default: '1.0.0'
 
 jobs:
-  build-and-release:
+  release:
     runs-on: windows-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
+    - uses: actions/checkout@v4
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
-      
+
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
-      
-    - name: Restore NuGet packages
-      run: nuget restore *.sln
-      
+
+    - name: Restore packages
+      run: nuget restore MDViewer.sln
+
     - name: Build Release
-      run: msbuild *.sln /p:Configuration=Release /p:Platform="Any CPU"
-      
-    - name: Create Release ZIP
-      run: |
-        $version = if ($env:GITHUB_REF -match 'refs/tags/v(.*)') { $matches[1] } else { "${{ github.event.inputs.version }}" }
-        $releaseDir = "MDViewer\bin\Release"
-        $zipPath = "MDViewer-v$version-Portable.zip"
-        
-        Compress-Archive -Path "$releaseDir\*" -DestinationPath $zipPath -Force
-        
-        echo "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
-        echo "ZIP_PATH=$zipPath" >> $env:GITHUB_ENV
+      run: msbuild MDViewer.sln /p:Configuration=Release /p:Platform="Any CPU"
+
+    - name: Install Inno Setup
+      run: choco install innosetup --no-progress -y
+
+    - name: Build And Package Assets
       shell: pwsh
-      
+      run: |
+        $version = "${{ github.ref_name }}".TrimStart('v')
+        $portableDir = "MDViewer-v$version-Portable"
+        $artifactsDir = "artifacts"
+        $outputDir = "MDViewer\bin\Release"
+
+        New-Item -ItemType Directory -Force -Path $portableDir | Out-Null
+        New-Item -ItemType Directory -Force -Path $artifactsDir | Out-Null
+
+        Copy-Item "$outputDir\MDViewer.exe" -Destination $portableDir
+        Copy-Item "$outputDir\MDViewer.exe.config" -Destination $portableDir
+        Copy-Item "$outputDir\Microsoft.Web.WebView2.*.dll" -Destination $portableDir
+
+        if (Test-Path "MDViewer\bin\Release\it") {
+          Copy-Item "MDViewer\bin\Release\it" -Destination $portableDir -Recurse
+        }
+
+        $portableZip = Join-Path $artifactsDir "MDViewer-v$version-Portable.zip"
+        Compress-Archive -Path "$portableDir\*" -DestinationPath $portableZip -Force
+
+        $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+        if (!(Test-Path $iscc)) {
+          throw "ISCC non trovato: $iscc"
+        }
+
+        & $iscc "/DMyAppVersion=$version" "Installer\MDViewer.iss"
+        if ($LASTEXITCODE -ne 0) {
+          throw "Build installer fallita"
+        }
+
+        $installerName = "MDViewer-Setup-$version.exe"
+        $installerPath = Join-Path "Release" $installerName
+        if (!(Test-Path $installerPath)) {
+          $candidate = Get-ChildItem "Release\MDViewer-Setup-*.exe" |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+          if ($null -eq $candidate) {
+            throw "Installer non trovato in Release\"
+          }
+          $installerPath = $candidate.FullName
+          $installerName = $candidate.Name
+        }
+
+        Copy-Item $installerPath -Destination (Join-Path $artifactsDir $installerName) -Force
+
+        $checksumFile = Join-Path $artifactsDir "MDViewer-v$version-SHA256.txt"
+        $portableHash = (Get-FileHash $portableZip -Algorithm SHA256).Hash.ToLowerInvariant()
+        $installerHash = (Get-FileHash (Join-Path $artifactsDir $installerName) -Algorithm SHA256).Hash.ToLowerInvariant()
+
+        @(
+          "$portableHash  $(Split-Path $portableZip -Leaf)"
+          "$installerHash  $installerName"
+        ) | Set-Content -Path $checksumFile -Encoding UTF8
+
+        "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: v${{ env.RELEASE_VERSION }}
-        name: MDViewer v${{ env.RELEASE_VERSION }}
+        tag_name: ${{ github.ref_name }}
+        name: MDViewer ${{ github.ref_name }}
         body: |
-          ## MDViewer v${{ env.RELEASE_VERSION }}
+          ## 🎉 MDViewer ${{ github.ref_name }}
+
+          ### 📦 Downloads
+          - **Portable**: estrai e avvia, senza installazione
+          - **Installer**: setup guidato (Inno Setup)
+          - **SHA256**: checksum ufficiali dei file allegati
+
+          ### Source Code
+          - Gli archivi sorgente sono pubblicati automaticamente da GitHub (`Source code (zip)` e `Source code (tar.gz)`).
+
+          ### 🚀 Features
+          - GitHub-flavored Markdown rendering
+          - Modern Material Design interface  
+          - Drag & Drop support
+          - Print functionality
+          - Auto WebView2 installation
+          - Multi-language support (IT/EN)
           
-          ### Downloads
-          - **Portable Version**: Download the ZIP file and extract to any folder
-          - **Installer**: Download and run the MSI installer (if available)
-          
-          ### System Requirements
-          - Windows 10 or later
+          ### 💻 Requirements
+          - Windows 10+
           - .NET Framework 4.8
-          - WebView2 Runtime (auto-installed if needed)
+          - WebView2 Runtime (auto-installed)
+          - Internet connection for full rendering
+          
+          ### ⚠️ Privacy Notice
+          - Uses GitHub public API (60 requests/hour limit)
+          - Do NOT use with sensitive/confidential content
+          - Content is sent to GitHub servers for processing
         files: |
-          ${{ env.ZIP_PATH }}
-          **/*.msi
+          artifacts/MDViewer-v*-Portable.zip
+          artifacts/MDViewer-Setup-*.exe
+          artifacts/MDViewer-v*-SHA256.txt
         draft: false
         prerelease: false

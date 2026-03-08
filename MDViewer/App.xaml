@@ -1,9 +1,15 @@
-﻿<Application x:Class="MDViewer.App"
+﻿<Application x:Class="it.carpanese.utilities.MDViewer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MDViewer"
+             xmlns:local="clr-namespace:it.carpanese.utilities.MDViewer"
              Startup="App_Startup">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/CommonStyles.xaml"/>
+                <!-- Tema predefinito (verrà sostituito dinamicamente) -->
+                <ResourceDictionary Source="Themes/LightTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MDViewer.Properties
+namespace it.carpanese.utilities.MDViewer.Properties
 {
 
 
