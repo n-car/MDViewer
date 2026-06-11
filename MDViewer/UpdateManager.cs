@@ -32,7 +32,7 @@ namespace it.carpanese.utilities.MDViewer
             // Configura HttpClient con User-Agent richiesto da GitHub
             if (!_httpClient.DefaultRequestHeaders.Contains("User-Agent"))
             {
-                _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("MDViewer/2.0");
+                _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"MDViewer/{CurrentVersionString.TrimStart('v')}");
                 _httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github.v3+json");
             }
         }

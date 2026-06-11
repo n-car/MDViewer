@@ -80,17 +80,30 @@ namespace it.carpanese.utilities.MDViewer
 
         private static void ConfigureUiCulture()
         {
-            var systemUiCulture = CultureInfo.InstalledUICulture;
-            var targetCulture = string.Equals(
-                systemUiCulture.TwoLetterISOLanguageName,
-                "it",
-                StringComparison.OrdinalIgnoreCase)
-                ? CultureInfo.GetCultureInfo("it-IT")
-                : CultureInfo.GetCultureInfo("en");
+            var targetCulture = ResolveUiCulture(AppSettings.Instance.LanguagePreference);
 
             Res.Culture = targetCulture;
             CultureInfo.DefaultThreadCurrentUICulture = targetCulture;
             Thread.CurrentThread.CurrentUICulture = targetCulture;
+        }
+
+        private static CultureInfo ResolveUiCulture(LanguagePreference languagePreference)
+        {
+            switch (languagePreference)
+            {
+                case LanguagePreference.Italian:
+                    return CultureInfo.GetCultureInfo("it-IT");
+                case LanguagePreference.English:
+                    return CultureInfo.GetCultureInfo("en");
+                default:
+                    var systemUiCulture = CultureInfo.InstalledUICulture;
+                    return string.Equals(
+                        systemUiCulture.TwoLetterISOLanguageName,
+                        "it",
+                        StringComparison.OrdinalIgnoreCase)
+                        ? CultureInfo.GetCultureInfo("it-IT")
+                        : CultureInfo.GetCultureInfo("en");
+            }
         }
     }
 }

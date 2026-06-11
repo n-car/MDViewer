@@ -417,6 +417,21 @@ Vuoi aprire il file?</value>
   <data name="SettingsThemeDescription" xml:space="preserve">
     <value>L'aspetto dell'interfaccia. 'Segui il sistema' usa il tema di Windows.</value>
   </data>
+  <data name="SettingsLanguageLabel" xml:space="preserve">
+    <value>Lingua</value>
+  </data>
+  <data name="SettingsLanguageAuto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="SettingsLanguageItalian" xml:space="preserve">
+    <value>Italiano</value>
+  </data>
+  <data name="SettingsLanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="SettingsLanguageDescription" xml:space="preserve">
+    <value>Lingua dell'interfaccia. Le modifiche vengono applicate al prossimo avvio di MDViewer.</value>
+  </data>
   <data name="SettingsSectionRecentFiles" xml:space="preserve">
     <value>📂 File Recenti</value>
   </data>

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-06-11
+
+### Changed
+- Updated NuGet dependencies: `Markdig` 1.2.0, `HtmlAgilityPack` 1.12.4, and `Microsoft.Web.WebView2` 1.0.4022.49.
+- Added an application language preference with Auto, Italian, and English options.
+- Shortened the README and refocused it on MDViewer as a desktop utility for local technical Markdown files.
+- Updated GitHub Release notes to describe local Markdig rendering as the default and GitHub API rendering as optional.
+
+### Fixed
+- Update checks now send a User-Agent based on the current application version.
+- Portable release archives now include all runtime DLLs and localization/runtime subfolders.
+- The installer now includes the Italian satellite resource assembly used by the application UI.
+- Repository line-ending rules are now explicit for Visual Studio files, Markdown, workflows, and binary assets.
+
 ## [2.0.0] - 2026-03-08
 
 ### Added

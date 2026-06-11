@@ -41,12 +41,30 @@ jobs:
         New-Item -ItemType Directory -Force -Path $portableDir | Out-Null
         New-Item -ItemType Directory -Force -Path $artifactsDir | Out-Null
 
-        Copy-Item "$outputDir\MDViewer.exe" -Destination $portableDir
-        Copy-Item "$outputDir\MDViewer.exe.config" -Destination $portableDir
-        Copy-Item "$outputDir\Microsoft.Web.WebView2.*.dll" -Destination $portableDir
+        Copy-Item "$outputDir\MDViewer.exe" -Destination $portableDir -Force
+        Copy-Item "$outputDir\MDViewer.exe.config" -Destination $portableDir -Force
+        Copy-Item "$outputDir\*.dll" -Destination $portableDir -Force
 
-        if (Test-Path "MDViewer\bin\Release\it") {
-          Copy-Item "MDViewer\bin\Release\it" -Destination $portableDir -Recurse
+        Get-ChildItem $outputDir -Directory | ForEach-Object {
+          Copy-Item $_.FullName -Destination $portableDir -Recurse -Force
+        }
+
+        $requiredPortableFiles = @(
+          "MDViewer.exe",
+          "MDViewer.exe.config",
+          "Markdig.dll",
+          "HtmlAgilityPack.dll",
+          "Microsoft.Web.WebView2.Core.dll",
+          "Microsoft.Web.WebView2.Wpf.dll",
+          "System.Memory.dll",
+          "it-IT\MDViewer.resources.dll"
+        )
+
+        foreach ($file in $requiredPortableFiles) {
+          $path = Join-Path $portableDir $file
+          if (!(Test-Path $path)) {
+            throw "Portable incompleto: file mancante $file"
+          }
         }
 
         $portableZip = Join-Path $artifactsDir "MDViewer-v$version-Portable.zip"
@@ -94,34 +112,36 @@ jobs:
         tag_name: ${{ github.ref_name }}
         name: MDViewer ${{ github.ref_name }}
         body: |
-          ## 🎉 MDViewer ${{ github.ref_name }}
+          ## MDViewer ${{ github.ref_name }}
 
-          ### 📦 Downloads
+          ### Downloads
           - **Portable**: extract and run, no installation required
-          - **Installer**: guided setup package (Inno Setup)
-          - **SHA256**: official checksums for attached files
+          - **Installer**: guided setup with optional Markdown file association
+          - **SHA256**: checksums for attached files
 
           ### Source Code
           - Source archives are published automatically by GitHub (`Source code (zip)` and `Source code (tar.gz)`).
 
-          ### 🚀 Features
-          - GitHub-flavored Markdown rendering
-          - Modern Material Design interface  
-          - Drag & Drop support
-          - Print functionality
-          - Auto WebView2 installation
-          - Multi-language support (IT/EN)
+          ### Features
+          - Local Markdown rendering with Markdig by default
+          - Optional GitHub-Flavored Markdown rendering through the GitHub API
+          - Print and PDF export
+          - Recent files and auto reload on file changes
+          - Theme and settings support
+          - App language preference: Auto, Italian, or English
+          - WebView2 based preview
+          - Multi-language interface (IT/EN)
           
-          ### 💻 Requirements
+          ### Requirements
           - Windows 10+
           - .NET Framework 4.8
-          - WebView2 Runtime (auto-installed)
-          - Internet connection for full rendering
+          - WebView2 Runtime
+          - Internet connection only for GitHub API rendering
           
-          ### ⚠️ Privacy Notice
-          - Uses GitHub public API (60 requests/hour limit)
-          - Do NOT use with sensitive/confidential content
-          - Content is sent to GitHub servers for processing
+          ### Privacy Notice
+          - Local Markdig rendering keeps Markdown content on your machine
+          - GitHub API rendering sends Markdown content to GitHub for processing
+          - Do not use GitHub API mode for sensitive documents unless that is acceptable for your workflow
         files: |
           artifacts/MDViewer-v*-Portable.zip
           artifacts/MDViewer-Setup-*.exe

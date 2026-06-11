@@ -35,6 +35,7 @@ namespace it.carpanese.utilities.MDViewer
 
             // Tema
             SelectComboBoxByTag(CmbTheme, settings.ThemePreference.ToString());
+            SelectComboBoxByTag(CmbLanguage, settings.LanguagePreference.ToString());
 
             // File Recenti
             SelectComboBoxByTag(CmbMaxRecentFiles, settings.MaxRecentFiles.ToString());
@@ -78,6 +79,12 @@ namespace it.carpanese.utilities.MDViewer
                     settings.ThemePreference = tp;
                     ApplyTheme(tp);
                 }
+            }
+
+            if (CmbLanguage.SelectedItem is ComboBoxItem langItem && langItem.Tag is string langTag)
+            {
+                if (Enum.TryParse<LanguagePreference>(langTag, out var lp))
+                    settings.LanguagePreference = lp;
             }
 
             // File Recenti

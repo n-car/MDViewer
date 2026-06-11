@@ -4,7 +4,7 @@
 
 #define MyAppName "MDViewer"
 #ifndef MyAppVersion
-#define MyAppVersion "2.0.0"
+#define MyAppVersion "2.0.1"
 #endif
 #define MyAppPublisher "Nicola Carpanese"
 #define MyAppURL "https://github.com/n-car/MDViewer"
@@ -85,6 +85,8 @@ Name: "fileassoc"; Description: "{cm:AssocMdFiles,{#MyAppName}}"; GroupDescripti
 Source: "..\MDViewer\bin\Release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 ; DLLs and dependencies
 Source: "..\MDViewer\bin\Release\*.dll"; DestDir: "{app}"; Flags: ignoreversion
+; Localized application resources
+Source: "..\MDViewer\bin\Release\it-IT\*"; DestDir: "{app}\it-IT"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 ; Configuration files
 Source: "..\MDViewer\bin\Release\*.config"; DestDir: "{app}"; Flags: ignoreversion
 ; Runtime folder for WebView2

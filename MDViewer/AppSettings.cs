@@ -46,6 +46,27 @@ namespace it.carpanese.utilities.MDViewer
     }
 
     /// <summary>
+    /// Preferenza lingua dell'interfaccia.
+    /// </summary>
+    public enum LanguagePreference
+    {
+        /// <summary>
+        /// Usa la lingua di Windows quando supportata.
+        /// </summary>
+        Auto,
+
+        /// <summary>
+        /// Sempre italiano.
+        /// </summary>
+        Italian,
+
+        /// <summary>
+        /// Sempre inglese.
+        /// </summary>
+        English
+    }
+
+    /// <summary>
     /// Gestisce le impostazioni dell'applicazione con persistenza su file.
     /// </summary>
     public class AppSettings
@@ -85,6 +106,11 @@ namespace it.carpanese.utilities.MDViewer
         /// Preferenza tema.
         /// </summary>
         public ThemePreference ThemePreference { get; set; } = ThemePreference.System;
+
+        /// <summary>
+        /// Preferenza lingua dell'interfaccia.
+        /// </summary>
+        public LanguagePreference LanguagePreference { get; set; } = LanguagePreference.Auto;
 
         // ========== FILE RECENTI ==========
         
@@ -217,6 +243,7 @@ namespace it.carpanese.utilities.MDViewer
                     "",
                     "# Tema",
                     $"ThemePreference={ThemePreference}",
+                    $"LanguagePreference={LanguagePreference}",
                     "",
                     "# File Recenti",
                     $"MaxRecentFiles={MaxRecentFiles}",
@@ -276,6 +303,11 @@ namespace it.carpanese.utilities.MDViewer
                     case "ThemePreference":
                         if (Enum.TryParse<ThemePreference>(value, out var tp))
                             ThemePreference = tp;
+                        break;
+
+                    case "LanguagePreference":
+                        if (Enum.TryParse<LanguagePreference>(value, out var lp))
+                            LanguagePreference = lp;
                         break;
 
                     case "MaxRecentFiles":
@@ -375,6 +407,7 @@ namespace it.carpanese.utilities.MDViewer
             DefaultProvider = MarkdownProvider.Markdig;
             EnableSyntaxHighlighting = true;
             ThemePreference = ThemePreference.System;
+            LanguagePreference = LanguagePreference.Auto;
             MaxRecentFiles = 10;
             MaxCacheSizeMB = 50;
             CacheDurationDays = 7;

@@ -71,6 +71,15 @@
                 </ComboBox>
                 <TextBlock Text="{local:Loc SettingsThemeDescription}" 
                           Style="{StaticResource SecondaryTextStyle}"/>
+
+                <TextBlock Text="{local:Loc SettingsLanguageLabel}" Style="{StaticResource SettingLabelTextStyle}"/>
+                <ComboBox x:Name="CmbLanguage" Margin="0,4,0,0" Style="{StaticResource InputComboBoxStyle}">
+                    <ComboBoxItem Content="{local:Loc SettingsLanguageAuto}" Tag="Auto"/>
+                    <ComboBoxItem Content="{local:Loc SettingsLanguageItalian}" Tag="Italian"/>
+                    <ComboBoxItem Content="{local:Loc SettingsLanguageEnglish}" Tag="English"/>
+                </ComboBox>
+                <TextBlock Text="{local:Loc SettingsLanguageDescription}"
+                          Style="{StaticResource SecondaryTextStyle}"/>
                 
                 <!-- ========== FILE RECENTI ========== -->
                 <TextBlock Text="{local:Loc SettingsSectionRecentFiles}" Style="{StaticResource SectionHeaderTextStyle}"/>
