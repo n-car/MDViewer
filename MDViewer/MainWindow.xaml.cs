@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
@@ -28,6 +29,8 @@ namespace it.carpanese.utilities.MDViewer
         private readonly SemaphoreSlim _loadFileSemaphore = new SemaphoreSlim(1, 1);
         private bool _enableSyntaxHighlighting = true;
         private bool _enableAutoReload = true;
+        private const double PdfPageMarginInches = 0.4;
+        private bool _recentFilesMenuRefreshPending;
 
         public MainWindow(string[] args)
         {
@@ -44,6 +47,7 @@ namespace it.carpanese.utilities.MDViewer
             InitializeComponent();
             RestoreWindowBounds();
             UpdateProviderButtonLabel();
+            RecentFilesMenu.Closed += RecentFilesMenu_Closed;
 
             // Registra listener per cambio tema
             ThemeManager.Instance.ThemeChanged += OnThemeChanged;
@@ -102,16 +106,11 @@ namespace it.carpanese.utilities.MDViewer
                 {
                     var menuItem = new MenuItem
                     {
-                        Header = Localizer.Format("MainRecentFileEntryFormat", index, fileInfo.FileName),
+                        Header = CreateRecentFileHeader(index, fileInfo),
                         ToolTip = fileInfo.FullPath,
                         Tag = fileInfo.FullPath,
                         IsEnabled = fileInfo.Exists
                     };
-
-                    if (!fileInfo.Exists)
-                    {
-                        menuItem.Header = Localizer.Format("MainRecentFileEntryMissingFormat", index, fileInfo.FileName);
-                    }
 
                     menuItem.Click += RecentFileMenuItem_Click;
                     RecentFilesMenu.Items.Add(menuItem);
@@ -135,6 +134,20 @@ namespace it.carpanese.utilities.MDViewer
                 clearItem.Click += ClearRecentFiles_Click;
                 RecentFilesMenu.Items.Add(clearItem);
             }
+        }
+
+        private TextBlock CreateRecentFileHeader(int index, RecentFileInfo fileInfo)
+        {
+            return new TextBlock
+            {
+                Text = Localizer.Format(
+                    fileInfo.Exists ? "MainRecentFileEntryFormat" : "MainRecentFileEntryMissingFormat",
+                    index,
+                    fileInfo.FileName),
+                MaxWidth = 420,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                TextWrapping = TextWrapping.NoWrap
+            };
         }
 
         /// <summary>
@@ -184,8 +197,18 @@ namespace it.carpanese.utilities.MDViewer
         /// </summary>
         private void RecentFiles_Click(object sender, RoutedEventArgs e)
         {
+            if (RecentFilesMenu.IsOpen)
+            {
+                RecentFilesMenu.IsOpen = false;
+                return;
+            }
+
             UpdateRecentFilesMenu();
+            RecentFilesMenu.PlacementTarget = BtnRecentFiles;
+            RecentFilesMenu.Placement = PlacementMode.Bottom;
+            RecentFilesMenu.VerticalOffset = 2;
             RecentFilesMenu.IsOpen = true;
+            e.Handled = true;
         }
 
         /// <summary>
@@ -193,7 +216,25 @@ namespace it.carpanese.utilities.MDViewer
         /// </summary>
         private void OnRecentFilesChanged(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(() => UpdateRecentFilesMenu());
+            Dispatcher.Invoke(() =>
+            {
+                if (RecentFilesMenu.IsOpen)
+                {
+                    _recentFilesMenuRefreshPending = true;
+                    return;
+                }
+
+                UpdateRecentFilesMenu();
+            });
+        }
+
+        private void RecentFilesMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            if (!_recentFilesMenuRefreshPending)
+                return;
+
+            _recentFilesMenuRefreshPending = false;
+            UpdateRecentFilesMenu();
         }
 
         /// <summary>
@@ -815,8 +856,11 @@ namespace it.carpanese.utilities.MDViewer
 
                     try
                     {
-                        // Usa PrintToPdfAsync di WebView2
-                        await Viewer.CoreWebView2.PrintToPdfAsync(saveDialog.FileName);
+                        var pdfCreated = await Viewer.CoreWebView2.PrintToPdfAsync(
+                            saveDialog.FileName,
+                            CreatePdfPrintSettings());
+                        if (!pdfCreated)
+                            throw new InvalidOperationException(Localizer.Get("MainExportPdfCreateFailed"));
 
                         HideStatus();
 
@@ -855,6 +899,19 @@ namespace it.carpanese.utilities.MDViewer
                 MessageBox.Show(Localizer.Format("MainGenericErrorFormat", ex.Message), Properties.Resources.Error,
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private Microsoft.Web.WebView2.Core.CoreWebView2PrintSettings CreatePdfPrintSettings()
+        {
+            var printSettings = Viewer.CoreWebView2.Environment.CreatePrintSettings();
+            printSettings.MarginTop = PdfPageMarginInches;
+            printSettings.MarginBottom = PdfPageMarginInches;
+            printSettings.MarginLeft = PdfPageMarginInches;
+            printSettings.MarginRight = PdfPageMarginInches;
+            printSettings.ScaleFactor = 1.0;
+            printSettings.ShouldPrintBackgrounds = true;
+            printSettings.ShouldPrintHeaderAndFooter = false;
+            return printSettings;
         }
 
         private async Task LoadFileAsync(string path)
@@ -1063,20 +1120,61 @@ hr {
     margin: 1.5em 0;
 }
 /* Tema dinamico */
+@media screen {
 " + themeCss + @"
+}
 /* Stile per stampa */
+@page {
+    margin: 10mm;
+}
 @media print {
+    *,
+    *::before,
+    *::after {
+        text-shadow: none !important;
+        box-shadow: none !important;
+    }
+    html,
     body {
         background: white !important;
-        color: black !important;
+        color: #24292f !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+        width: auto !important;
+    }
+    .markdown-body {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: auto !important;
+    }
+    h1, h2, h3, h4, h5, h6,
+    p, li, td, th {
+        color: #24292f !important;
+    }
+    a {
+        color: #0969da !important;
+        text-decoration: underline !important;
+    }
+    blockquote {
+        color: #57606a !important;
+        border-left-color: #d0d7de !important;
     }
     pre {
         background: #f6f8fa !important;
         border: 1px solid #ccc !important;
     }
     pre code {
+        color: #24292f !important;
         white-space: pre-wrap !important;
         word-break: break-word !important;
+    }
+    pre code *,
+    .hljs,
+    .hljs * {
+        color: #24292f !important;
+        background: transparent !important;
     }
 }
 </style>
@@ -1192,6 +1290,7 @@ hr {
 
             ThemeManager.Instance.ThemeChanged -= OnThemeChanged;
             RecentFilesManager.Instance.RecentFilesChanged -= OnRecentFilesChanged;
+            RecentFilesMenu.Closed -= RecentFilesMenu_Closed;
         }
 
         private void Window_Drop(object sender, DragEventArgs e)

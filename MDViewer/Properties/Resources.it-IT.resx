@@ -237,10 +237,10 @@
     <value>Impostazioni</value>
   </data>
   <data name="MainRecentFileEntryFormat" xml:space="preserve">
-    <value>_{0}. {1}</value>
+    <value>{0}. {1}</value>
   </data>
   <data name="MainRecentFileEntryMissingFormat" xml:space="preserve">
-    <value>_{0}. {1} (non trovato)</value>
+    <value>{0}. {1} (non trovato)</value>
   </data>
   <data name="MainClearRecentFilesMenuItem" xml:space="preserve">
     <value>Pulisci lista file recenti</value>
@@ -356,6 +356,9 @@ Vuoi aprire il file?</value>
   <data name="MainExportPdfErrorFormat" xml:space="preserve">
     <value>Errore durante l'esportazione PDF:
 {0}</value>
+  </data>
+  <data name="MainExportPdfCreateFailed" xml:space="preserve">
+    <value>WebView2 non è riuscito a creare il file PDF.</value>
   </data>
   <data name="MainGenericErrorFormat" xml:space="preserve">
     <value>Errore: {0}</value>

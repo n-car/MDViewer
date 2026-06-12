@@ -111,7 +111,7 @@ namespace it.carpanese.utilities.MDViewer
                 .UseAdvancedExtensions()          // Tabelle, footnotes, abbreviations, etc.
                 .UseAutoLinks()                   // Auto-link URLs e email
                 .UseTaskLists()                   // - [ ] Task lists
-                .UseEmojiAndSmiley()              // :emoji: → Unicode
+                .UseEmojiAndSmiley(false)         // :emoji: -> Unicode; ASCII smileys would break table alignments like ---:
                 .UseSoftlineBreakAsHardlineBreak() // Line breaks come <br>
                 .UseAutoIdentifiers()             // ID automatici per headers
                 .Build();

@@ -106,42 +106,53 @@ jobs:
 
         "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
 
+    - name: Prepare Release Notes
+      shell: pwsh
+      run: |
+        $version = "${{ github.ref_name }}".TrimStart('v')
+        $escapedVersion = [regex]::Escape($version)
+        $changelog = Get-Content "CHANGELOG.md" -Raw
+        $match = [regex]::Match($changelog, "(?ms)^## \[$escapedVersion\].*?(?=^## \[|\z)")
+
+        if ($match.Success) {
+          $changes = ($match.Value.Trim()) -replace "(?m)^## \[$escapedVersion\].*$", "### Changes"
+        } else {
+          $changes = "### Changes`n- See the project changelog for details."
+        }
+
+        $body = @(
+          "## MDViewer ${{ github.ref_name }}"
+          ""
+          $changes
+          ""
+          "### Downloads"
+          "- **Portable**: extract and run, no installation required"
+          "- **Installer**: guided setup with optional Markdown file association"
+          "- **SHA256**: checksums for attached files"
+          ""
+          "### Source Code"
+          "- Source archives are published automatically by GitHub (Source code zip and Source code tar.gz)."
+          ""
+          "### Requirements"
+          "- Windows 10+"
+          "- .NET Framework 4.8"
+          "- WebView2 Runtime"
+          "- Internet connection only for GitHub API rendering"
+          ""
+          "### Privacy Notice"
+          "- Local Markdig rendering keeps Markdown content on your machine"
+          "- GitHub API rendering sends Markdown content to GitHub for processing"
+          "- Do not use GitHub API mode for sensitive documents unless that is acceptable for your workflow"
+        ) -join "`n"
+
+        Set-Content -Path "artifacts\release-notes.md" -Value $body.Trim() -Encoding UTF8
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref_name }}
         name: MDViewer ${{ github.ref_name }}
-        body: |
-          ## MDViewer ${{ github.ref_name }}
-
-          ### Downloads
-          - **Portable**: extract and run, no installation required
-          - **Installer**: guided setup with optional Markdown file association
-          - **SHA256**: checksums for attached files
-
-          ### Source Code
-          - Source archives are published automatically by GitHub (`Source code (zip)` and `Source code (tar.gz)`).
-
-          ### Features
-          - Local Markdown rendering with Markdig by default
-          - Optional GitHub-Flavored Markdown rendering through the GitHub API
-          - Print and PDF export
-          - Recent files and auto reload on file changes
-          - Theme and settings support
-          - App language preference: Auto, Italian, or English
-          - WebView2 based preview
-          - Multi-language interface (IT/EN)
-          
-          ### Requirements
-          - Windows 10+
-          - .NET Framework 4.8
-          - WebView2 Runtime
-          - Internet connection only for GitHub API rendering
-          
-          ### Privacy Notice
-          - Local Markdig rendering keeps Markdown content on your machine
-          - GitHub API rendering sends Markdown content to GitHub for processing
-          - Do not use GitHub API mode for sensitive documents unless that is acceptable for your workflow
+        body_path: artifacts/release-notes.md
         files: |
           artifacts/MDViewer-v*-Portable.zip
           artifacts/MDViewer-Setup-*.exe

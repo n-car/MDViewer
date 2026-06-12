@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-06-12
+
+### Fixed
+- Fixed recent files dropdown placement and display for long file names containing underscores.
+- Fixed local Markdig rendering for tables with right-aligned columns.
+- Reduced excessive side margins when printing or exporting Markdown documents to PDF.
+
 ## [2.0.1] - 2026-06-11
 
 ### Changed

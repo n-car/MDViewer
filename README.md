@@ -16,6 +16,7 @@ Markdown files often live next to the code they describe. MDViewer exists for th
 - Recent files
 - Auto reload when the current file changes
 - Theme and settings support
+- Italian/English interface with Auto, Italian, and English language preference
 - WebView2 based preview
 
 ## Rendering Modes
@@ -32,7 +33,7 @@ For documents that need closer GitHub-Flavored Markdown compatibility, MDViewer 
 
 ## Download / Build
 
-Download installers from the [GitHub Releases](https://github.com/n-car/MDViewer/releases) page.
+Download the installer or portable ZIP from the [GitHub Releases](https://github.com/n-car/MDViewer/releases) page.
 
 To build from source:
 
