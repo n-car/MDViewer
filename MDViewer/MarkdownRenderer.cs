@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Markdig;
@@ -96,6 +97,10 @@ namespace it.carpanese.utilities.MDViewer
             "data:image/webp;base64,"
         };
 
+        private static readonly Regex _exportedCitationPattern = new Regex(
+            @"\uE200cite(?:\uE202[^\uE200\uE201\r\n]+)+\uE201",
+            RegexOptions.Compiled);
+
         private readonly MarkdownPipeline _markdigPipeline;
         private readonly MarkdownCache _cache;
         private static readonly HttpClient _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
@@ -131,6 +136,8 @@ namespace it.carpanese.utilities.MDViewer
             if (string.IsNullOrEmpty(markdown))
                 return new RenderResult { Html = string.Empty, FromCache = false };
 
+            markdown = RemoveExportedCitationMarkers(markdown);
+
             switch (CurrentProvider)
             {
                 case MarkdownProvider.Markdig:
@@ -142,6 +149,11 @@ namespace it.carpanese.utilities.MDViewer
                 default:
                     return RenderWithMarkdig(markdown);
             }
+        }
+
+        private static string RemoveExportedCitationMarkers(string markdown)
+        {
+            return _exportedCitationPattern.Replace(markdown, string.Empty);
         }
 
         /// <summary>

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.3] - 2026-06-13
+
+### Fixed
+- Removed exported Deep Research citation markers from rendered Markdown output.
+
 ## [2.0.2] - 2026-06-12
 
 ### Fixed

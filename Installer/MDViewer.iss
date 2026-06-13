@@ -4,7 +4,7 @@
 
 #define MyAppName "MDViewer"
 #ifndef MyAppVersion
-#define MyAppVersion "2.0.2"
+#define MyAppVersion "2.0.3"
 #endif
 #define MyAppPublisher "Nicola Carpanese"
 #define MyAppURL "https://github.com/n-car/MDViewer"
